@@ -51,7 +51,7 @@ onstart() {
 
 	# 关闭frps进程
 	if [ -n "$(pidof frpsnew)" ];then
-		echo_date "关闭当前frps进程..."
+		echo_date "关闭当前frpsnew进程..."
 		killall frpsnew >/dev/null 2>&1
 	fi
 	
@@ -60,7 +60,7 @@ onstart() {
 		dbus set frpsnew_client_version=$(/koolshare/bin/frpsnew --version)
 		frpsnew_client_version=$(/koolshare/bin/frpsnew --version)
 	fi
-	echo_date "当前插件frps主程序版本号：${frpsnew_client_version}"
+	echo_date "当前插件frpsnew主程序版本号：${frpsnew_client_version}"
 
 	# frps配置文件
 	echo_date "生成frps配置文件到 /koolshare/configs/frpsnew.toml"
@@ -69,15 +69,9 @@ onstart() {
 	bindPort = ${frpsnew_bindPort}
 	# QUIC 绑定的是 UDP 端口，可以和 bindPort 一样
 	quicBindPort = ${frpsnew_bindPort}
-	vhostHTTPPort = ${frpsnew_vhostHTTPPort}
-	vhostHTTPSPort = ${frpsnew_vhostHTTPSPort}
-	# console or real logFile path like ./frpsnew.log
-	log.to = ${frpsnew_common_log_file}
-	# debug, info, warn, error
-	log.level = ${frpsnew_common_log_level}
-	log.maxDays = ${frpsnew_common_log_max_days}
 	# if you enable privilege mode, frpc can create a proxy without pre-configure in frps when privilege_token is correct
-	auth.token = ${frpsnew_auth_token}
+	auth.method = "token"
+	auth.token = "${frpsnew_auth_token}"
 	# pool_count in each proxy will change to max_pool_count if they exceed the maximum value
 	transport.maxPoolCount = ${frpsnew_transport_maxPoolCount}
 	
@@ -88,10 +82,10 @@ onstart() {
 		cru d frpsnew_monitor >/dev/null 2>&1
 	else
 		if [ "${frpsnew_common_cron_hour_min}" == "min" ]; then
-			echo_date "设置定时任务：每隔${frpsnew_common_cron_time}分钟注册一次frps服务..."
+			echo_date "设置定时任务：每隔${frpsnew_common_cron_time}分钟注册一次frpsnew服务..."
 			cru a frpsnew_monitor "*/"${frpsnew_common_cron_time}" * * * * /bin/sh /koolshare/scripts/frpsnew_config.sh"
 		elif [ "${frpsnew_common_cron_hour_min}" == "hour" ]; then
-			echo_date "设置定时任务：每隔${frpsnew_common_cron_time}小时注册一次frps服务..."
+			echo_date "设置定时任务：每隔${frpsnew_common_cron_time}小时注册一次frpsnew服务..."
 			cru a frpsnew_monitor "0 */"${frpsnew_common_cron_time}" * * * /bin/sh /koolshare/scripts/frpsnew_config.sh"
 		fi
 		echo_date "定时任务设置完成！"
@@ -99,7 +93,7 @@ onstart() {
 
 	# 开启frps
 	if [ "$frpsnew_enable" == "1" ]; then
-		echo_date "启动frps主程序..."
+		echo_date "启动frpsnew主程序..."
 		export GOGC=40
 		start-stop-daemon -S -q -b -m -p /var/run/frpsnew.pid -x /koolshare/bin/frpsnew -- -c ${TOML_FILE}
 
@@ -109,19 +103,19 @@ onstart() {
 			i=$(($i - 1))
 			FRPSPID=$(pidof frpsnew)
 			if [ "$i" -lt 1 ]; then
-				echo_date "frps进程启动失败！"
+				echo_date "frpsnew进程启动失败！"
 				echo_date "可能是内存不足造成的，建议使用虚拟内存后重试！"
 				close_in_five
 			fi
 			usleep 250000
 		done
-		echo_date "frps启动成功，pid：${FRPSPID}"
+		echo_date "frpsnew启动成功，pid：${FRPSPID}"
 		fun_nat_start
 		open_port
 	else
 		stop
 	fi
-	echo_date "frps插件启动完毕，本窗口将在5s内自动关闭！"
+	echo_date "frpsnew插件启动完毕，本窗口将在5s内自动关闭！"
 }
 check_port(){
 	local prot=$1
@@ -136,11 +130,7 @@ check_port(){
 open_port(){
 	local t_port
 	local u_port
-	[ "$(check_port tcp ${frpsnew_vhostHTTPPort})" == "1" ] && iptables -I INPUT -p tcp --dport ${frpsnew_vhostHTTPPort} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${frpsnew_vhostHTTPPort}"
-	[ "$(check_port tcp ${frpsnew_vhostHTTPSPort})" == "1" ] && iptables -I INPUT -p tcp --dport ${frpsnew_vhostHTTPSPort} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${t_port} ${frpsnew_vhostHTTPSPort}"
 	[ "$(check_port tcp ${frpsnew_bindPort})" == "1" ] && iptables -I INPUT -p tcp --dport ${frpsnew_bindPort} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${t_port} ${frpsnew_bindPort}"
-	[ "$(check_port udp ${frpsnew_vhostHTTPPort})" == "1" ] && iptables -I INPUT -p udp --dport ${frpsnew_vhostHTTPPort} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${frpsnew_vhostHTTPPort}"
-	[ "$(check_port udp ${frpsnew_vhostHTTPSPort})" == "1" ] && iptables -I INPUT -p udp --dport ${frpsnew_vhostHTTPSPort} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${u_port} ${frpsnew_vhostHTTPSPort}"
 	[ "$(check_port udp ${frpsnew_bindPort})" == "1" ] && iptables -I INPUT -p udp --dport ${frpsnew_bindPort} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${u_port} ${frpsnew_bindPort}"
 	[ -n "${t_port}" ] && echo_date "开启TCP端口：${t_port}"
 	[ -n "${u_port}" ] && echo_date "开启UDP端口：${u_port}"
@@ -148,11 +138,7 @@ open_port(){
 close_port(){
 	local t_port
 	local u_port
-	[ "$(check_port tcp ${frpsnew_vhostHTTPPort})" == "0" ] && iptables -D INPUT -p tcp --dport ${frpsnew_vhostHTTPPort} -j ACCEPT >/dev/null 2>&1 && t_port="${frpsnew_vhostHTTPPort}"
-	[ "$(check_port tcp ${frpsnew_vhostHTTPSPort})" == "0" ] && iptables -D INPUT -p tcp --dport ${frpsnew_vhostHTTPSPort} -j ACCEPT >/dev/null 2>&1 && t_port="${t_port} ${frpsnew_vhostHTTPSPort}"
 	[ "$(check_port tcp ${frpsnew_bindPort})" == "0" ] && iptables -D INPUT -p tcp --dport ${frpsnew_bindPort} -j ACCEPT >/dev/null 2>&1 && t_port="${t_port} ${frpsnew_bindPort}"
-	[ "$(check_port udp ${frpsnew_vhostHTTPPort})" == "0" ] && iptables -D INPUT -p udp --dport ${frpsnew_vhostHTTPPort} -j ACCEPT >/dev/null 2>&1 && u_port="${frpsnew_vhostHTTPPort}"
-	[ "$(check_port udp ${frpsnew_vhostHTTPSPort})" == "0" ] && iptables -D INPUT -p udp --dport ${frpsnew_vhostHTTPSPort} -j ACCEPT >/dev/null 2>&1 && u_port="${u_port} ${frpsnew_vhostHTTPSPort}"
 	[ "$(check_port udp ${frpsnew_bindPort})" == "0" ] && iptables -D INPUT -p udp --dport ${frpsnew_bindPort} -j ACCEPT >/dev/null 2>&1 && u_port="${u_port} ${frpsnew_bindPort}"
 	[ -n "${t_port}" ] && echo_date "关闭TCP端口：${t_port}"
 	[ -n "${u_port}" ] && echo_date "关闭UDP端口：${u_port}"

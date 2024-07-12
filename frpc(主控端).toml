@@ -1,0 +1,32 @@
+#主控端配置文件内容
+serverAddr = "*.*.*.*"   #服务器的域名或者固定IP地址
+serverPort = ****   #服务器的端口号
+auth.method = "token" 
+auth.token = "**********"   #服务器的验证口令
+transport.protocol = "quic"
+webServer.addr = "127.0.0.1"
+webServer.port = 7399
+log.to = "./logs/frpc.log"
+log.level = "info"
+log.maxDays = 3
+
+[[visitors]]
+name = "stcp-visitor"
+type = "stcp"
+serverName = "RDP-xtcp-****"
+secretKey = "********"     #被控主机的安全口令
+bindPort = -1
+transport.useEncryption = true   #传输加密，加密算法采用 aes-128-cfb
+transport.useCompression = true   #传输压缩，压缩算法采用 snappy
+
+[[visitors]]
+name = "xtcp-visitor"
+type = "xtcp"
+serverName = "RDP-xtcp-****"
+secretKey = "********"     #被控主机的安全口令
+bindAddr = "127.0.0.1"
+bindPort = 6000
+transport.useEncryption = true   #传输加密，加密算法采用 aes-128-cfb
+transport.useCompression = true   #传输压缩，压缩算法采用 snappy
+fallbackTo = "stcp-visitor"
+fallbackTimeoutMs = 200

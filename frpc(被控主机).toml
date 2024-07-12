@@ -1,0 +1,21 @@
+#被控主机的客户端配置文件
+
+serverAddr = "*.*.*.*"
+serverPort = ****
+auth.method = "token" 
+auth.token = "**********"
+transport.protocol = "quic"
+webServer.addr = "127.0.0.1"
+webServer.port = 7399
+log.to = "./logs/frpc.log"
+log.level = "info"
+log.maxDays = 3
+
+[[proxies]]
+name = "RDP-xtcp-****"
+type = "xtcp"
+secretKey = "**********"
+localIP = "127.0.0.1"
+localPort = 3389
+transport.useEncryption = true   #传输加密，加密算法采用 aes-128-cfb
+transport.useCompression = true   #传输压缩，压缩算法采用 snappy

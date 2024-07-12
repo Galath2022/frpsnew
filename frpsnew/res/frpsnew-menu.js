@@ -15,30 +15,10 @@ function openssHint(itemNum){
         _caption = "auth.token";
     }
     else if(itemNum == 3){
-        statusmenu ="此处填入你的frp服务器HTTP穿透服务的端口，对应服务器配置文件中的vhostHTTPPort字段";
-        _caption = "vhostHTTPPort";
-    }
-    else if(itemNum == 4){
-        statusmenu ="此处填入你的frp服务器HTTPS穿透服务的端口，对应服务器配置文件中的vhostHTTPSPort字段";
-        _caption = "vhostHTTPSPort";
-    }
-    else if(itemNum == 5){
-        statusmenu ="此处是否开启frpc客户端日志。<br/><font color='#F46'>注意：</font>默认不开启，开启后日志路径为/tmp/frpc.log";
-        _caption = "日志记录";
-    }
-    else if(itemNum == 6){
-        statusmenu ="此处选择日志记录等级。<br/>可选内容：info、warn、error、debug。";
-        _caption = "日志等级";
-    }
-    else if(itemNum == 7){
-        statusmenu ="此处选择要保留的日志天数。";
-        _caption = "日志记录天数";
-    }
-    else if(itemNum == 8){
         statusmenu ="最大连接池数量。<br/>默认情况下，当用户请求建立连接后，frps 才会请求 frpc 主动与后端服务建立一个连接。当为指定的代理启用连接池后，frp 会预先和后端服务建立起指定数量的连接，每次接收到用户请求后，会从连接池中取出一个连接和用户连接关联起来，避免了等待与后端服务建立连接以及 frpc 和 frps 之间传递控制信息的时间";
         _caption = "transport.maxPoolCount";
     }
-    else if(itemNum == 9){
+    else if(itemNum == 4){
         statusmenu ="定时到Frp服务器上重新注册服务，以便Frp提供持续的服务。<br/><font color='#F46'>注意：</font>填写内容为0时关闭该功能！";
         _caption = "定时注册服务";
     }

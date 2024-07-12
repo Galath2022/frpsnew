@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
@@ -57,7 +57,7 @@ input[type=button]:focus {
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <script>
 var db_frpsnew = {};
-var params_input = ["frpsnew_bindPort", "frpsnew_auth_token", "frpsnew_vhostHTTPPort", "frpsnew_vhostHTTPSPort", "frpsnew_common_cron_time", "frpsnew_transport_maxPoolCount", "frpsnew_common_log_file", "frpsnew_common_log_level", "frpsnew_common_log_max_days", "frpsnew_common_cron_hour_min"]
+var params_input = ["frpsnew_bindPort", "frpsnew_auth_token", "frpsnew_common_cron_time", "frpsnew_transport_maxPoolCount", "frpsnew_common_cron_hour_min"]
 var params_check = ["frpsnew_enable"];
 var	refresh_flag;
 var count_down;
@@ -119,7 +119,7 @@ function conf2obj(){
 	}
 }
 function save() {
-	if(!E(frpsnew_bindPort).value || !E(frpsnew_auth_token).value || !E(frpsnew_vhostHTTPPort).value || !E(frpsnew_vhostHTTPSPort).value || !E(frpsnew_transport_maxPoolCount).value || !E(frpsnew_common_cron_time).value){
+	if(!E(frpsnew_bindPort).value || !E(frpsnew_auth_token).value || !E(frpsnew_transport_maxPoolCount).value || !E(frpsnew_common_cron_time).value){
 		alert("提交的表单不能为空!");
 		return false;
 	}
@@ -363,54 +363,7 @@ function get_log(action){
 													</td>
 												</tr>
 												<tr>
-													<th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(3)">vhostHTTPPort</a></th>
-													<td>
-														<input type="text" class="input_ss_table" id="frpsnew_vhostHTTPPort" name="frpsnew_vhostHTTPPort" maxlength="6" value="" />
-													</td>
-												</tr>
-												<tr>
-													<th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(4)">vhostHTTPSPort</a></th>
-													<td>
-														<input type="text" class="input_ss_table" id="frpsnew_vhostHTTPSPort" name="frpsnew_vhostHTTPSPort maxlength="6" value="" />
-													</td>
-												</tr>
-												<tr>
-													<th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(5)">日志记录</a></th>
-													<td>
-														<select id="frpsnew_common_log_file" name="frpsnew_common_log_file" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
-															<option value="/tmp/frpsnew.log">开启</option>
-															<option value="/dev/null">关闭</option>
-														</select>
-													</td>
-												</tr>
-												<tr>
-													<th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(6)">日志等级</a></th>
-													<td>
-														<select id="frpsnew_common_log_level" name="frpsnew_common_log_level" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
-															<option value="info">info</option>
-															<option value="warn">warn</option>
-															<option value="error">error</option>
-															<option value="debug">debug</option>
-														</select>
-													</td>
-												</tr>
-												<tr>
-													<th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(7)">日志记录天数</a></th>
-													<td>
-														<select id="frpsnew_common_log_max_days" name="frpsnew_common_log_max_days" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
-															<option value="1">1</option>
-															<option value="2">2</option>
-															<option value="3" selected="selected">3</option>
-															<option value="4">4</option>
-															<option value="5">6</option>
-															<option value="6">6</option>
-															<option value="7">7</option>
-															<option value="30">30</option>
-														</select>
-													</td>
-												</tr>
-												<tr>
-													<th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(8)">ransport.maxPoolCount</a></th>
+													<th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(3)">ransport.maxPoolCount</a></th>
 													<td>
 														<select id="frpsnew_transport_maxPoolCount" name="frpsnew_transport_maxPoolCount" style="width:60px;margin:3px 2px 0px 2px;" class="input_option">
 															<option value="10">10</option>
@@ -429,7 +382,7 @@ function get_log(action){
 													</td>
 												</tr>
 												<tr>
-													<th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(9)">定时注册服务</a>(<i>0为关闭</i>)</th>
+													<th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(4)">定时注册服务</a>(<i>0为关闭</i>)</th>
 													<td>
 														每
 														<input type="text" id="frpsnew_common_cron_time" name="frpsnew_common_cron_time" class="input_ss_table" style="width:30px" value="30" placeholder="" />
